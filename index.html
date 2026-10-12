@@ -12,12 +12,12 @@
         <!-- Header -->
         <div class="border-b border-slate-800 pb-4">
             <h1 class="text-3xl font-extrabold tracking-tight text-blue-400">HTML Script Protector</h1>
-            <p class="text-slate-400 mt-1">Shrink, scramble, and protect your HTML code and internal &lt;script&gt; tags.</p>
+            <p class="text-slate-400 mt-1">Shrink, scramble, and protect your HTML code and internal script tags.</p>
         </div>
 
         <!-- Input Area -->
         <div class="space-y-2">
-            <label class="block text-sm font-semibold text-slate-300">Paste your raw HTML code here (must include &lt;script&gt; tags):</label>
+            <label class="block text-sm font-semibold text-slate-300">Paste your raw HTML code here:</label>
             <textarea id="inputCode" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-cyan-300 focus:outline-none focus:border-blue-500" placeholder="<!DOCTYPE html>&#10;<html>&#10;<body>&#10;  <script>&#10;    console.log('Secret logic');&#10;  </script>&#10;</body>&#10;</html>"></textarea>
         </div>
 
@@ -48,7 +48,7 @@
                 return;
             }
 
-            // Regex to find content inside <script>...</script>
+            // Safe regex matching for script tags
             let scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
             let scriptFound = false;
 
@@ -56,7 +56,7 @@
                 if (!jsCode.trim()) return match;
                 scriptFound = true;
 
-                // 1. Minify/Shrink the JS code (remove comments and extra whitespace)
+                // 1. Minify/Shrink the JS code
                 let minified = jsCode
                     .replace(/\/\*[\s\S]*?\*\/|([^:])\/\/.*/g, '$1') 
                     .replace(/\s+/g, ' ') 
@@ -65,23 +65,15 @@
                 // 2. Encode payload
                 let encoded = btoa(encodeURIComponent(minified));
 
-                // 3. Generate wrapper
-                let wrapper = `<script>
-(function(p){
-    try {
-        var d = decodeURIComponent(atob(p));
-        var s = document.createElement('script');
-        s.text = d;
-        document.head.appendChild(s);
-    } catch(e) { console.error('Execution error'); }
-})("${encoded}");
-<\/script>`;
+                // 3. Generate wrapper using safe string concatenation to avoid parser bugs
+                let closeTag = '</' + 'script>';
+                let wrapper = '<script>\n(function(p){\n    try {\n        var d = decodeURIComponent(atob(p));\n        var s = document.createElement("script");\n        s.text = d;\n        document.head.appendChild(s);\n    } catch(e) { console.error("Execution error"); }\n})("' + encoded + '");\n' + closeTag;
 
                 return wrapper;
             });
 
             if (!scriptFound) {
-                alert('Notice: No <script>...</script> tags were found in your text! Make sure your JavaScript is wrapped in script tags so it can be encrypted.');
+                alert('Notice: No script tags were found in your text!');
             } else {
                 alert('Success! Scripts protected and encrypted.');
             }

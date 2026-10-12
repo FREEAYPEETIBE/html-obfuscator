@@ -1,142 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced HTML Obfuscator & Packer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Protected Page</title>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 md:p-12">
-    <div class="max-w-4xl mx-auto space-y-6">
-        
-        <!-- Header -->
-        <div class="border-b border-slate-800 pb-4">
-            <h1 class="text-3xl font-extrabold tracking-tight text-blue-400">Advanced HTML Obfuscator</h1>
-            <p class="text-slate-400 mt-1">Pack full HTML, encrypt code, and strip scripts/comments from the Elements tab.</p>
-        </div>
+<body>
+<script>
+(function(htmlPayload, scriptPayload){
+    try {
+        // Write clean HTML (zero script tags or comments in DOM Elements tab)
+        var decodedHtml = decodeURIComponent(atob(htmlPayload));
+        document.open();
+        document.write(decodedHtml);
+        document.close();
 
-        <!-- Input Area -->
-        <div class="space-y-2">
-            <label class="block text-sm font-semibold text-slate-300">Paste your complete HTML file code here:</label>
-            <textarea id="inputCode" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-cyan-300 focus:outline-none focus:border-blue-500" placeholder="<!DOCTYPE html>&#10;<html>&#10;<head><title>My App</title></head>&#10;<body>&#10;  <h1>Hello World</h1>&#10;  <!-- Secret comment -->&#10;  <script>console.log('Stealth script');</script>&#10;</body>&#10;</html>"></textarea>
-        </div>
-
-        <!-- Obfuscation Options (Matching PHPKobo style) -->
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg space-y-3">
-            <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Obfuscation Options</h3>
-            
-            <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox" id="removeScripts" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-700 focus:ring-blue-500">
-                <span class="text-sm text-slate-300">Remove all script blocks (&lt;script&gt;...&lt;/script&gt;) from the Elements tab in DevTools</span>
-            </label>
-
-            <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox" id="removeComments" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-700 focus:ring-blue-500">
-                <span class="text-sm text-slate-300">Remove all comment blocks (&lt;!--...--&gt;) from the Elements tab in DevTools</span>
-            </label>
-        </div>
-
-        <!-- Action Button -->
-        <div>
-            <button onclick="packAndObfuscate()" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-200 w-full md:w-auto">
-                Obfuscate & Pack HTML
-            </button>
-        </div>
-
-        <!-- Output Area -->
-        <div class="space-y-2">
-            <div class="flex justify-between items-center">
-                <label class="block text-sm font-semibold text-slate-300">Protected Output Code:</label>
-                <button onclick="copyOutput()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded border border-slate-700 transition">Copy Code</button>
-            </div>
-            <textarea id="outputCode" rows="8" readonly class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-emerald-400 focus:outline-none" placeholder="Protected output will appear here..."></textarea>
-        </div>
-
-    </div>
-
-    <!-- Advanced Packer & Stripper Engine -->
-    <script>
-        function packAndObfuscate() {
-            let html = document.getElementById('inputCode').value;
-            
-            if (!html.trim()) {
-                alert('Please enter complete HTML code first!');
-                return;
-            }
-
-            let shouldRemoveComments = document.getElementById('removeComments').checked;
-            let shouldRemoveScripts = document.getElementById('removeScripts').checked;
-
-            // 1. Remove comment blocks if option is checked
-            if (shouldRemoveComments) {
-                html = html.replace(/<!--[\s\S]*?-->/g, '');
-            }
-
-            let extractedScripts = [];
-
-            // 2. Remove script blocks from HTML and store them for memory execution if checked
-            if (shouldRemoveScripts) {
-                let scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
-                html = html.replace(scriptRegex, (match, jsCode) => {
-                    if (jsCode.trim()) {
-                        extractedScripts.push(jsCode.trim());
-                    }
-                    return ''; // Completely deletes the <script> tag from the HTML markup!
-                });
-            }
-
-            // 3. Encode the cleaned HTML payload
-            let encodedHtml = btoa(encodeURIComponent(html));
-            
-            // 4. Encode extracted scripts payload separately
-            let encodedScripts = btoa(encodeURIComponent(JSON.stringify(extractedScripts)));
-
-            // 5. Generate the final packing wrapper script
-            let closeTag = '</' + 'script>';
-            let finalOutput = '<!DOCTYPE html>\n' +
-                '<html>\n' +
-                '<head>\n' +
-                '    <meta charset="UTF-8">\n' +
-                '    <title>Protected Page</title>\n' +
-                '</head>\n' +
-                '<body>\n' +
-                '<script>\n' +
-                '(function(htmlPayload, scriptPayload){\n' +
-                '    try {\n' +
-                '        // Write clean HTML (zero script tags or comments in DOM Elements tab)\n' +
-                '        var decodedHtml = decodeURIComponent(atob(htmlPayload));\n' +
-                '        document.open();\n' +
-                '        document.write(decodedHtml);\n' +
-                '        document.close();\n\n' +
-                '        // Execute scripts in memory via eval\n' +
-                '        var scripts = JSON.parse(decodeURIComponent(atob(scriptPayload)));\n' +
-                '        scripts.forEach(function(code) {\n' +
-                '            eval(code);\n' +
-                '        });\n' +
-                '    } catch(e) { console.error("Execution error", e); }\n' +
-                '})("' + encodedHtml + '", "' + encodedScripts + '");\n' +
-                closeTag + '\n' +
-                '</body>\n' +
-                '</html>';
-
-            document.getElementById('outputCode').value = finalOutput;
-            alert('Success! HTML obfuscated and packed with DevTools script/comment stripping enabled.');
-        }
-
-        function copyOutput() {
-            let outputBox = document.getElementById('outputCode');
-            if (!outputBox.value.trim()) {
-                alert('Nothing to copy yet!');
-                return;
-            }
-            navigator.clipboard.writeText(outputBox.value).then(() => {
-                alert('Protected code copied to clipboard!');
-            }).catch(err => {
-                outputBox.select();
-                document.execCommand('copy');
-                alert('Protected code copied to clipboard!');
-            });
-        }
-    </script>
+        // Execute scripts in memory via eval
+        var scripts = JSON.parse(decodeURIComponent(atob(scriptPayload)));
+        scripts.forEach(function(code) {
+            eval(code);
+        });
+    } catch(e) { console.error("Execution error", e); }
+})("JTNDIURPQ1RZUEUlMjBodG1sJTNFJTBBJTNDaHRtbCUyMGxhbmclM0QlMjJlbiUyMiUzRSUwQSUzQ2hlYWQlM0UlMEElMjAlMjAlMjAlMjAlM0NtZXRhJTIwY2hhcnNldCUzRCUyMlVURi04JTIyJTNFJTBBJTIwJTIwJTIwJTIwJTNDbWV0YSUyMG5hbWUlM0QlMjJ2aWV3cG9ydCUyMiUyMGNvbnRlbnQlM0QlMjJ3aWR0aCUzRGRldmljZS13aWR0aCUyQyUyMGluaXRpYWwtc2NhbGUlM0QxLjAlMjIlM0UlMEElMjAlMjAlMjAlMjAlM0N0aXRsZSUzRUFkdmFuY2VkJTIwSFRNTCUyME9iZnVzY2F0b3IlMjAlMjYlMjBQYWNrZXIlM0MlMkZ0aXRsZSUzRSUwQSUyMCUyMCUyMCUyMCUwQSUzQyUyRmhlYWQlM0UlMEElM0Nib2R5JTIwY2xhc3MlM0QlMjJiZy1zbGF0ZS05NTAlMjB0ZXh0LXNsYXRlLTEwMCUyMG1pbi1oLXNjcmVlbiUyMHAtNiUyMG1kJTNBcC0xMiUyMiUzRSUwQSUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIybWF4LXctNHhsJTIwbXgtYXV0byUyMHNwYWNlLXktNiUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIyYm9yZGVyLWIlMjBib3JkZXItc2xhdGUtODAwJTIwcGItNCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2gxJTIwY2xhc3MlM0QlMjJ0ZXh0LTN4bCUyMGZvbnQtZXh0cmFib2xkJTIwdHJhY2tpbmctdGlnaHQlMjB0ZXh0LWJsdWUtNDAwJTIyJTNFQWR2YW5jZWQlMjBIVE1MJTIwT2JmdXNjYXRvciUzQyUyRmgxJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDcCUyMGNsYXNzJTNEJTIydGV4dC1zbGF0ZS00MDAlMjBtdC0xJTIyJTNFUGFjayUyMGZ1bGwlMjBIVE1MJTJDJTIwZW5jcnlwdCUyMGNvZGUlMkMlMjBhbmQlMjBzdHJpcCUyMHNjcmlwdHMlMkZjb21tZW50cyUyMGZyb20lMjB0aGUlMjBFbGVtZW50cyUyMHRhYi4lM0MlMkZwJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGZGl2JTNFJTBBJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwY2xhc3MlM0QlMjJzcGFjZS15LTIlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NsYWJlbCUyMGNsYXNzJTNEJTIyYmxvY2slMjB0ZXh0LXNtJTIwZm9udC1zZW1pYm9sZCUyMHRleHQtc2xhdGUtMzAwJTIyJTNFUGFzdGUlMjB5b3VyJTIwY29tcGxldGUlMjBIVE1MJTIwZmlsZSUyMGNvZGUlMjBoZXJlJTNBJTNDJTJGbGFiZWwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0N0ZXh0YXJlYSUyMGlkJTNEJTIyaW5wdXRDb2RlJTIyJTIwcm93cyUzRCUyMjglMjIlMjBjbGFzcyUzRCUyMnctZnVsbCUyMGJnLXNsYXRlLTkwMCUyMGJvcmRlciUyMGJvcmRlci1zbGF0ZS03MDAlMjByb3VuZGVkLWxnJTIwcC00JTIwZm9udC1tb25vJTIwdGV4dC1zbSUyMHRleHQtY3lhbi0zMDAlMjBmb2N1cyUzQW91dGxpbmUtbm9uZSUyMGZvY3VzJTNBYm9yZGVyLWJsdWUtNTAwJTIyJTIwcGxhY2Vob2xkZXIlM0QlMjIlM0MhRE9DVFlQRSUyMGh0bWwlM0UlMjYlMjMxMCUzQiUzQ2h0bWwlM0UlMjYlMjMxMCUzQiUzQ2hlYWQlM0UlM0N0aXRsZSUzRU15JTIwQXBwJTNDJTJGdGl0bGUlM0UlM0MlMkZoZWFkJTNFJTI2JTIzMTAlM0IlM0Nib2R5JTNFJTI2JTIzMTAlM0IlMjAlMjAlM0NoMSUzRUhlbGxvJTIwV29ybGQlM0MlMkZoMSUzRSUyNiUyMzEwJTNCJTIwJTIwJTI2JTIzMTAlM0IlMjAlMjAlMjYlMjMxMCUzQiUzQyUyRmJvZHklM0UlMjYlMjMxMCUzQiUzQyUyRmh0bWwlM0UlMjIlM0UlM0MlMkZ0ZXh0YXJlYSUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIyYmctc2xhdGUtOTAwJTIwYm9yZGVyJTIwYm9yZGVyLXNsYXRlLTgwMCUyMHAtNCUyMHJvdW5kZWQtbGclMjBzcGFjZS15LTMlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NoMyUyMGNsYXNzJTNEJTIydGV4dC1zbSUyMGZvbnQtYm9sZCUyMHRleHQtc2xhdGUtMzAwJTIwdXBwZXJjYXNlJTIwdHJhY2tpbmctd2lkZXIlMjIlM0VPYmZ1c2NhdGlvbiUyME9wdGlvbnMlM0MlMkZoMyUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2xhYmVsJTIwY2xhc3MlM0QlMjJmbGV4JTIwaXRlbXMtY2VudGVyJTIwc3BhY2UteC0zJTIwY3Vyc29yLXBvaW50ZXIlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NpbnB1dCUyMHR5cGUlM0QlMjJjaGVja2JveCUyMiUyMGlkJTNEJTIycmVtb3ZlU2NyaXB0cyUyMiUyMGNoZWNrZWQlMjBjbGFzcyUzRCUyMnctNCUyMGgtNCUyMHRleHQtYmx1ZS02MDAlMjByb3VuZGVkJTIwYmctc2xhdGUtODAwJTIwYm9yZGVyLXNsYXRlLTcwMCUyMGZvY3VzJTNBcmluZy1ibHVlLTUwMCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ3NwYW4lMjBjbGFzcyUzRCUyMnRleHQtc20lMjB0ZXh0LXNsYXRlLTMwMCUyMiUzRVJlbW92ZSUyMGFsbCUyMHNjcmlwdCUyMGJsb2NrcyUyMCglMjZsdCUzQnNjcmlwdCUyNmd0JTNCLi4uJTI2bHQlM0IlMkZzY3JpcHQlMjZndCUzQiklMjBmcm9tJTIwdGhlJTIwRWxlbWVudHMlMjB0YWIlMjBpbiUyMERldlRvb2xzJTNDJTJGc3BhbiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmxhYmVsJTNFJTBBJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbGFiZWwlMjBjbGFzcyUzRCUyMmZsZXglMjBpdGVtcy1jZW50ZXIlMjBzcGFjZS14LTMlMjBjdXJzb3ItcG9pbnRlciUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2lucHV0JTIwdHlwZSUzRCUyMmNoZWNrYm94JTIyJTIwaWQlM0QlMjJyZW1vdmVDb21tZW50cyUyMiUyMGNoZWNrZWQlMjBjbGFzcyUzRCUyMnctNCUyMGgtNCUyMHRleHQtYmx1ZS02MDAlMjByb3VuZGVkJTIwYmctc2xhdGUtODAwJTIwYm9yZGVyLXNsYXRlLTcwMCUyMGZvY3VzJTNBcmluZy1ibHVlLTUwMCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ3NwYW4lMjBjbGFzcyUzRCUyMnRleHQtc20lMjB0ZXh0LXNsYXRlLTMwMCUyMiUzRVJlbW92ZSUyMGFsbCUyMGNvbW1lbnQlMjBibG9ja3MlMjAoJTI2bHQlM0IhLS0uLi4tLSUyNmd0JTNCKSUyMGZyb20lMjB0aGUlMjBFbGVtZW50cyUyMHRhYiUyMGluJTIwRGV2VG9vbHMlM0MlMkZzcGFuJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbGFiZWwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZkaXYlM0UlMEElMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NkaXYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NidXR0b24lMjBvbmNsaWNrJTNEJTIycGFja0FuZE9iZnVzY2F0ZSgpJTIyJTIwY2xhc3MlM0QlMjJiZy1ibHVlLTYwMCUyMGhvdmVyJTNBYmctYmx1ZS01MDAlMjB0ZXh0LXdoaXRlJTIwZm9udC1zZW1pYm9sZCUyMHB4LTYlMjBweS0zJTIwcm91bmRlZC1sZyUyMHNoYWRvdy1sZyUyMHRyYW5zaXRpb24lMjBkdXJhdGlvbi0yMDAlMjB3LWZ1bGwlMjBtZCUzQXctYXV0byUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyME9iZnVzY2F0ZSUyMCUyNiUyMFBhY2slMjBIVE1MJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGYnV0dG9uJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGZGl2JTNFJTBBJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwY2xhc3MlM0QlMjJzcGFjZS15LTIlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NkaXYlMjBjbGFzcyUzRCUyMmZsZXglMjBqdXN0aWZ5LWJldHdlZW4lMjBpdGVtcy1jZW50ZXIlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NsYWJlbCUyMGNsYXNzJTNEJTIyYmxvY2slMjB0ZXh0LXNtJTIwZm9udC1zZW1pYm9sZCUyMHRleHQtc2xhdGUtMzAwJTIyJTNFUHJvdGVjdGVkJTIwT3V0cHV0JTIwQ29kZSUzQSUzQyUyRmxhYmVsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDYnV0dG9uJTIwb25jbGljayUzRCUyMmNvcHlPdXRwdXQoKSUyMiUyMGNsYXNzJTNEJTIydGV4dC14cyUyMGJnLXNsYXRlLTgwMCUyMGhvdmVyJTNBYmctc2xhdGUtNzAwJTIwdGV4dC1zbGF0ZS0zMDAlMjBweC0zJTIwcHktMSUyMHJvdW5kZWQlMjBib3JkZXIlMjBib3JkZXItc2xhdGUtNzAwJTIwdHJhbnNpdGlvbiUyMiUzRUNvcHklMjBDb2RlJTNDJTJGYnV0dG9uJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGZGl2JTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDdGV4dGFyZWElMjBpZCUzRCUyMm91dHB1dENvZGUlMjIlMjByb3dzJTNEJTIyOCUyMiUyMHJlYWRvbmx5JTIwY2xhc3MlM0QlMjJ3LWZ1bGwlMjBiZy1zbGF0ZS05MDAlMjBib3JkZXIlMjBib3JkZXItc2xhdGUtNzAwJTIwcm91bmRlZC1sZyUyMHAtNCUyMGZvbnQtbW9ubyUyMHRleHQtc20lMjB0ZXh0LWVtZXJhbGQtNDAwJTIwZm9jdXMlM0FvdXRsaW5lLW5vbmUlMjIlMjBwbGFjZWhvbGRlciUzRCUyMlByb3RlY3RlZCUyMG91dHB1dCUyMHdpbGwlMjBhcHBlYXIlMjBoZXJlLi4uJTIyJTNFJTNDJTJGdGV4dGFyZWElM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZkaXYlM0UlMEElMEElMjAlMjAlMjAlMjAlM0MlMkZkaXYlM0UlMEElMEElMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjAlMEElM0MlMkZib2R5JTNFJTBBJTNDJTJGaHRtbCUzRSUwQQ==", "JTVCJTIyY29uc29sZS5sb2coJ1N0ZWFsdGglMjBzY3JpcHQnKSUzQiUyMiUyQyUyMmZ1bmN0aW9uJTIwcGFja0FuZE9iZnVzY2F0ZSgpJTIwJTdCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMGh0bWwlMjAlM0QlMjBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnaW5wdXRDb2RlJykudmFsdWUlM0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGlmJTIwKCFodG1sLnRyaW0oKSklMjAlN0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwYWxlcnQoJ1BsZWFzZSUyMGVudGVyJTIwY29tcGxldGUlMjBIVE1MJTIwY29kZSUyMGZpcnN0IScpJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMHJldHVybiUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QlNUNuJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMHNob3VsZFJlbW92ZUNvbW1lbnRzJTIwJTNEJTIwZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JlbW92ZUNvbW1lbnRzJykuY2hlY2tlZCUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBsZXQlMjBzaG91bGRSZW1vdmVTY3JpcHRzJTIwJTNEJTIwZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JlbW92ZVNjcmlwdHMnKS5jaGVja2VkJTNCJTVDbiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMkYlMkYlMjAxLiUyMFJlbW92ZSUyMGNvbW1lbnQlMjBibG9ja3MlMjBpZiUyMG9wdGlvbiUyMGlzJTIwY2hlY2tlZCU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMChzaG91bGRSZW1vdmVDb21tZW50cyklMjAlN0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwaHRtbCUyMCUzRCUyMGh0bWwucmVwbGFjZSglMkYlMkZnJTJDJTIwJycpJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCU1Q24lNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwbGV0JTIwZXh0cmFjdGVkU2NyaXB0cyUyMCUzRCUyMCU1QiU1RCUzQiU1Q24lNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTJGJTJGJTIwMi4lMjBSZW1vdmUlMjBzY3JpcHQlMjBibG9ja3MlMjBmcm9tJTIwSFRNTCUyMGFuZCUyMHN0b3JlJTIwdGhlbSUyMGZvciUyMG1lbW9yeSUyMGV4ZWN1dGlvbiUyMGlmJTIwY2hlY2tlZCU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMChzaG91bGRSZW1vdmVTY3JpcHRzKSUyMCU3QiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBsZXQlMjBzY3JpcHRSZWdleCUyMCUzRCUyMCUyRiUzQ3NjcmlwdCU1QyU1Q2IlNUIlNUUlM0UlNUQqJTNFKCU1QiU1QyU1Q3MlNUMlNUNTJTVEKiUzRiklM0MlNUMlNUMlMkZzY3JpcHQlM0UlMkZnaSUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBodG1sJTIwJTNEJTIwaHRtbC5yZXBsYWNlKHNjcmlwdFJlZ2V4JTJDJTIwKG1hdGNoJTJDJTIwanNDb2RlKSUyMCUzRCUzRSUyMCU3QiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMChqc0NvZGUudHJpbSgpKSUyMCU3QiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBleHRyYWN0ZWRTY3JpcHRzLnB1c2goanNDb2RlLnRyaW0oKSklM0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTdEJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMHJldHVybiUyMCcnJTNCJTIwJTJGJTJGJTIwQ29tcGxldGVseSUyMGRlbGV0ZXMlMjB0aGUlMjAlM0NzY3JpcHQlM0UlMjB0YWclMjBmcm9tJTIwdGhlJTIwSFRNTCUyMG1hcmt1cCElNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTdEKSUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QlNUNuJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyRiUyRiUyMDMuJTIwRW5jb2RlJTIwdGhlJTIwY2xlYW5lZCUyMEhUTUwlMjBwYXlsb2FkJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMGVuY29kZWRIdG1sJTIwJTNEJTIwYnRvYShlbmNvZGVVUklDb21wb25lbnQoaHRtbCkpJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMkYlMkYlMjA0LiUyMEVuY29kZSUyMGV4dHJhY3RlZCUyMHNjcmlwdHMlMjBwYXlsb2FkJTIwc2VwYXJhdGVseSU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBsZXQlMjBlbmNvZGVkU2NyaXB0cyUyMCUzRCUyMGJ0b2EoZW5jb2RlVVJJQ29tcG9uZW50KEpTT04uc3RyaW5naWZ5KGV4dHJhY3RlZFNjcmlwdHMpKSklM0IlNUNuJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyRiUyRiUyMDUuJTIwR2VuZXJhdGUlMjB0aGUlMjBmaW5hbCUyMHBhY2tpbmclMjB3cmFwcGVyJTIwc2NyaXB0JTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMGNsb3NlVGFnJTIwJTNEJTIwJyUzQyUyRiclMjAlMkIlMjAnc2NyaXB0JTNFJyUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBsZXQlMjBmaW5hbE91dHB1dCUyMCUzRCUyMCclM0MhRE9DVFlQRSUyMGh0bWwlM0UlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDaHRtbCUzRSU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclM0NoZWFkJTNFJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCUzQ21ldGElMjBjaGFyc2V0JTNEJTVDJTIyVVRGLTglNUMlMjIlM0UlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTNDdGl0bGUlM0VQcm90ZWN0ZWQlMjBQYWdlJTNDJTJGdGl0bGUlM0UlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDJTJGaGVhZCUzRSU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclM0Nib2R5JTNFJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUzQ3NjcmlwdCUzRSU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCcoZnVuY3Rpb24oaHRtbFBheWxvYWQlMkMlMjBzY3JpcHRQYXlsb2FkKSU3QiU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclMjAlMjAlMjAlMjB0cnklMjAlN0IlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTJGJTJGJTIwV3JpdGUlMjBjbGVhbiUyMEhUTUwlMjAoemVybyUyMHNjcmlwdCUyMHRhZ3MlMjBvciUyMGNvbW1lbnRzJTIwaW4lMjBET00lMjBFbGVtZW50cyUyMHRhYiklNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwdmFyJTIwZGVjb2RlZEh0bWwlMjAlM0QlMjBkZWNvZGVVUklDb21wb25lbnQoYXRvYihodG1sUGF5bG9hZCkpJTNCJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGRvY3VtZW50Lm9wZW4oKSUzQiU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBkb2N1bWVudC53cml0ZShkZWNvZGVkSHRtbCklM0IlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZG9jdW1lbnQuY2xvc2UoKSUzQiU1QyU1Q24lNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTJGJTJGJTIwRXhlY3V0ZSUyMHNjcmlwdHMlMjBpbiUyMG1lbW9yeSUyMHZpYSUyMGV2YWwlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwdmFyJTIwc2NyaXB0cyUyMCUzRCUyMEpTT04ucGFyc2UoZGVjb2RlVVJJQ29tcG9uZW50KGF0b2Ioc2NyaXB0UGF5bG9hZCkpKSUzQiU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBzY3JpcHRzLmZvckVhY2goZnVuY3Rpb24oY29kZSklMjAlN0IlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZXZhbChjb2RlKSUzQiU1QyU1Q24nJTIwJTJCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QpJTNCJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCU3RCUyMGNhdGNoKGUpJTIwJTdCJTIwY29uc29sZS5lcnJvciglNUMlMjJFeGVjdXRpb24lMjBlcnJvciU1QyUyMiUyQyUyMGUpJTNCJTIwJTdEJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyU3RCkoJTVDJTIyJyUyMCUyQiUyMGVuY29kZWRIdG1sJTIwJTJCJTIwJyU1QyUyMiUyQyUyMCU1QyUyMiclMjAlMkIlMjBlbmNvZGVkU2NyaXB0cyUyMCUyQiUyMCclNUMlMjIpJTNCJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwY2xvc2VUYWclMjAlMkIlMjAnJTVDJTVDbiclMjAlMkIlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUzQyUyRmJvZHklM0UlNUMlNUNuJyUyMCUyQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDJTJGaHRtbCUzRSclM0IlNUNuJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdvdXRwdXRDb2RlJykudmFsdWUlMjAlM0QlMjBmaW5hbE91dHB1dCUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBhbGVydCgnU3VjY2VzcyElMjBIVE1MJTIwb2JmdXNjYXRlZCUyMGFuZCUyMHBhY2tlZCUyMHdpdGglMjBEZXZUb29scyUyMHNjcmlwdCUyRmNvbW1lbnQlMjBzdHJpcHBpbmclMjBlbmFibGVkLicpJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCU1Q24lNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZnVuY3Rpb24lMjBjb3B5T3V0cHV0KCklMjAlN0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwbGV0JTIwb3V0cHV0Qm94JTIwJTNEJTIwZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ291dHB1dENvZGUnKSUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMCghb3V0cHV0Qm94LnZhbHVlLnRyaW0oKSklMjAlN0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwYWxlcnQoJ05vdGhpbmclMjB0byUyMGNvcHklMjB5ZXQhJyklM0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwcmV0dXJuJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBuYXZpZ2F0b3IuY2xpcGJvYXJkLndyaXRlVGV4dChvdXRwdXRCb3gudmFsdWUpLnRoZW4oKCklMjAlM0QlM0UlMjAlN0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwYWxlcnQoJ1Byb3RlY3RlZCUyMGNvZGUlMjBjb3BpZWQlMjB0byUyMGNsaXBib2FyZCEnKSUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QpLmNhdGNoKGVyciUyMCUzRCUzRSUyMCU3QiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBvdXRwdXRCb3guc2VsZWN0KCklM0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZG9jdW1lbnQuZXhlY0NvbW1hbmQoJ2NvcHknKSUzQiU1Q24lMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBhbGVydCgnUHJvdGVjdGVkJTIwY29kZSUyMGNvcGllZCUyMHRvJTIwY2xpcGJvYXJkIScpJTNCJTVDbiUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCklM0IlNUNuJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTdEJTIyJTVE");
+</script>
 </body>
 </html>

@@ -1,19 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Protected Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced HTML Obfuscator & Packer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<script>
-(function(p){
-    try {
-        var html = decodeURIComponent(atob(p));
-        document.open();
-        document.write(html);
-        document.close();
-    } catch(e) { console.error("Loading error", e); }
-})("JTNDIURPQ1RZUEUlMjBodG1sJTNFJTBBJTNDaHRtbCUyMGxhbmclM0QlMjJlbiUyMiUzRSUwQSUzQ2hlYWQlM0UlMEElMjAlMjAlMjAlMjAlM0NtZXRhJTIwY2hhcnNldCUzRCUyMlVURi04JTIyJTNFJTBBJTIwJTIwJTIwJTIwJTNDbWV0YSUyMG5hbWUlM0QlMjJ2aWV3cG9ydCUyMiUyMGNvbnRlbnQlM0QlMjJ3aWR0aCUzRGRldmljZS13aWR0aCUyQyUyMGluaXRpYWwtc2NhbGUlM0QxLjAlMjIlM0UlMEElMjAlMjAlMjAlMjAlM0N0aXRsZSUzRUZ1bGwtUGFnZSUyMEhUTUwlMjBQYWNrZXIlMjAlMjYlMjBPYmZ1c2NhdG9yJTNDJTJGdGl0bGUlM0UlMEElMjAlMjAlMjAlMjAlM0NzY3JpcHQlMjBzcmMlM0QlMjJodHRwcyUzQSUyRiUyRmNkbi50YWlsd2luZGNzcy5jb20lMjIlM0UlM0MlMkZzY3JpcHQlM0UlMEElM0MlMkZoZWFkJTNFJTBBJTNDYm9keSUyMGNsYXNzJTNEJTIyYmctc2xhdGUtOTUwJTIwdGV4dC1zbGF0ZS0xMDAlMjBtaW4taC1zY3JlZW4lMjBwLTYlMjBtZCUzQXAtMTIlMjIlM0UlMEElMjAlMjAlMjAlMjAlM0NkaXYlMjBjbGFzcyUzRCUyMm1heC13LTR4bCUyMG14LWF1dG8lMjBzcGFjZS15LTYlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MhLS0lMjBIZWFkZXIlMjAtLSUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIyYm9yZGVyLWIlMjBib3JkZXItc2xhdGUtODAwJTIwcGItNCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2gxJTIwY2xhc3MlM0QlMjJ0ZXh0LTN4bCUyMGZvbnQtZXh0cmFib2xkJTIwdHJhY2tpbmctdGlnaHQlMjB0ZXh0LWJsdWUtNDAwJTIyJTNFRnVsbC1QYWdlJTIwSFRNTCUyMFBhY2tlciUzQyUyRmgxJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDcCUyMGNsYXNzJTNEJTIydGV4dC1zbGF0ZS00MDAlMjBtdC0xJTIyJTNFQ29udmVydHMlMjB5b3VyJTIwZW50aXJlJTIwSFRNTCUyMHBhZ2UlMjBpbnRvJTIwYW4lMjBlbmNyeXB0ZWQlMjBwYXlsb2FkJTIwKEhpZGVzJTIwYWxsJTIwcmF3JTIwSFRNTCUyMGZyb20lMjAlMjJWaWV3JTIwU291cmNlJTIyKS4lM0MlMkZwJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGZGl2JTNFJTBBJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDIS0tJTIwSW5wdXQlMjBBcmVhJTIwLS0lM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NkaXYlMjBjbGFzcyUzRCUyMnNwYWNlLXktMiUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2xhYmVsJTIwY2xhc3MlM0QlMjJibG9jayUyMHRleHQtc20lMjBmb250LXNlbWlib2xkJTIwdGV4dC1zbGF0ZS0zMDAlMjIlM0VQYXN0ZSUyMHlvdXIlMjBjb21wbGV0ZSUyMEhUTUwlMjBmaWxlJTIwY29kZSUyMGhlcmUlM0ElM0MlMkZsYWJlbCUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ3RleHRhcmVhJTIwaWQlM0QlMjJpbnB1dENvZGUlMjIlMjByb3dzJTNEJTIyOCUyMiUyMGNsYXNzJTNEJTIydy1mdWxsJTIwYmctc2xhdGUtOTAwJTIwYm9yZGVyJTIwYm9yZGVyLXNsYXRlLTcwMCUyMHJvdW5kZWQtbGclMjBwLTQlMjBmb250LW1vbm8lMjB0ZXh0LXNtJTIwdGV4dC1jeWFuLTMwMCUyMGZvY3VzJTNBb3V0bGluZS1ub25lJTIwZm9jdXMlM0Fib3JkZXItYmx1ZS01MDAlMjIlMjBwbGFjZWhvbGRlciUzRCUyMiUzQyFET0NUWVBFJTIwaHRtbCUzRSUyNiUyMzEwJTNCJTNDaHRtbCUzRSUyNiUyMzEwJTNCJTNDaGVhZCUzRSUzQ3RpdGxlJTNFTXklMjBBcHAlM0MlMkZ0aXRsZSUzRSUzQyUyRmhlYWQlM0UlMjYlMjMxMCUzQiUzQ2JvZHklM0UlMjYlMjMxMCUzQiUyMCUyMCUzQ2gxJTNFSGVsbG8lMjBXb3JsZCUzQyUyRmgxJTNFJTI2JTIzMTAlM0IlMjAlMjAlM0NzY3JpcHQlM0Vjb25zb2xlLmxvZygnU2VjcmV0JyklM0IlM0MlMkZzY3JpcHQlM0UlMjYlMjMxMCUzQiUzQyUyRmJvZHklM0UlMjYlMjMxMCUzQiUzQyUyRmh0bWwlM0UlMjIlM0UlM0MlMkZ0ZXh0YXJlYSUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyEtLSUyMEFjdGlvbiUyMEJ1dHRvbiUyMC0tJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDYnV0dG9uJTIwb25jbGljayUzRCUyMnBhY2tGdWxsSHRtbCgpJTIyJTIwY2xhc3MlM0QlMjJiZy1ibHVlLTYwMCUyMGhvdmVyJTNBYmctYmx1ZS01MDAlMjB0ZXh0LXdoaXRlJTIwZm9udC1zZW1pYm9sZCUyMHB4LTYlMjBweS0zJTIwcm91bmRlZC1sZyUyMHNoYWRvdy1sZyUyMHRyYW5zaXRpb24lMjBkdXJhdGlvbi0yMDAlMjB3LWZ1bGwlMjBtZCUzQXctYXV0byUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMFBhY2slMjAlMjYlMjBPYmZ1c2NhdGUlMjBGdWxsJTIwSFRNTCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmJ1dHRvbiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyEtLSUyME91dHB1dCUyMEFyZWElMjAtLSUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIyc3BhY2UteS0yJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwY2xhc3MlM0QlMjJmbGV4JTIwanVzdGlmeS1iZXR3ZWVuJTIwaXRlbXMtY2VudGVyJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbGFiZWwlMjBjbGFzcyUzRCUyMmJsb2NrJTIwdGV4dC1zbSUyMGZvbnQtc2VtaWJvbGQlMjB0ZXh0LXNsYXRlLTMwMCUyMiUzRVByb3RlY3RlZCUyME91dHB1dCUyMEZpbGUlMjBDb2RlJTNBJTNDJTJGbGFiZWwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NidXR0b24lMjBvbmNsaWNrJTNEJTIyY29weU91dHB1dCgpJTIyJTIwY2xhc3MlM0QlMjJ0ZXh0LXhzJTIwYmctc2xhdGUtODAwJTIwaG92ZXIlM0FiZy1zbGF0ZS03MDAlMjB0ZXh0LXNsYXRlLTMwMCUyMHB4LTMlMjBweS0xJTIwcm91bmRlZCUyMGJvcmRlciUyMGJvcmRlci1zbGF0ZS03MDAlMjB0cmFuc2l0aW9uJTIyJTNFQ29weSUyMENvZGUlM0MlMkZidXR0b24lM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZkaXYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0N0ZXh0YXJlYSUyMGlkJTNEJTIyb3V0cHV0Q29kZSUyMiUyMHJvd3MlM0QlMjI4JTIyJTIwcmVhZG9ubHklMjBjbGFzcyUzRCUyMnctZnVsbCUyMGJnLXNsYXRlLTkwMCUyMGJvcmRlciUyMGJvcmRlci1zbGF0ZS03MDAlMjByb3VuZGVkLWxnJTIwcC00JTIwZm9udC1tb25vJTIwdGV4dC1zbSUyMHRleHQtZW1lcmFsZC00MDAlMjBmb2N1cyUzQW91dGxpbmUtbm9uZSUyMiUyMHBsYWNlaG9sZGVyJTNEJTIyUHJvdGVjdGVkJTIwb3V0cHV0JTIwd2lsbCUyMGFwcGVhciUyMGhlcmUuLi4lMjIlM0UlM0MlMkZ0ZXh0YXJlYSUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUwQSUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUwQSUyMCUyMCUyMCUyMCUzQyEtLSUyMFBhY2tlciUyMEVuZ2luZSUyMExvZ2ljJTIwLS0lM0UlMEElMjAlMjAlMjAlMjAlM0NzY3JpcHQlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBmdW5jdGlvbiUyMHBhY2tGdWxsSHRtbCgpJTIwJTdCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwbGV0JTIwZnVsbEh0bWwlMjAlM0QlMjBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnaW5wdXRDb2RlJykudmFsdWUlM0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMCghZnVsbEh0bWwudHJpbSgpKSUyMCU3QiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGFsZXJ0KCdQbGVhc2UlMjBlbnRlciUyMGNvbXBsZXRlJTIwSFRNTCUyMGNvZGUlMjBmaXJzdCEnKSUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMHJldHVybiUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCUwQSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyRiUyRiUyMDEuJTIwRW5jb2RlJTIwdGhlJTIwZW50aXJlJTIwSFRNTCUyMHN0cnVjdHVyZSUyMHNlY3VyZWx5JTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwbGV0JTIwZW5jb2RlZCUyMCUzRCUyMGJ0b2EoZW5jb2RlVVJJQ29tcG9uZW50KGZ1bGxIdG1sKSklM0IlMEElMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMkYlMkYlMjAyLiUyMEdlbmVyYXRlJTIwdGhlJTIwZG9jdW1lbnQtd3JpdGluZyUyMHdyYXBwZXIlMjB0ZW1wbGF0ZSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMGNsb3NlVGFnJTIwJTNEJTIwJyUzQyUyRiclMjAlMkIlMjAnc2NyaXB0JTNFJyUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMHBhY2tlZE91dHB1dCUyMCUzRCUyMCclM0MhRE9DVFlQRSUyMGh0bWwlM0UlNUNuJyUyMCUyQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclM0NodG1sJTNFJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDaGVhZCUzRSU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCUzQ21ldGElMjBjaGFyc2V0JTNEJTIyVVRGLTglMjIlM0UlNUNuJyUyMCUyQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclMjAlMjAlMjAlMjAlM0N0aXRsZSUzRVByb3RlY3RlZCUyMFBhZ2UlM0MlMkZ0aXRsZSUzRSU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUzQyUyRmhlYWQlM0UlNUNuJyUyMCUyQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCclM0Nib2R5JTNFJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDc2NyaXB0JTNFJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnKGZ1bmN0aW9uKHApJTdCJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwdHJ5JTIwJTdCJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwdmFyJTIwaHRtbCUyMCUzRCUyMGRlY29kZVVSSUNvbXBvbmVudChhdG9iKHApKSUzQiU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGRvY3VtZW50Lm9wZW4oKSUzQiU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGRvY3VtZW50LndyaXRlKGh0bWwpJTNCJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZG9jdW1lbnQuY2xvc2UoKSUzQiU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUyMCUyMCUyMCUyMCU3RCUyMGNhdGNoKGUpJTIwJTdCJTIwY29uc29sZS5lcnJvciglMjJMb2FkaW5nJTIwZXJyb3IlMjIlMkMlMjBlKSUzQiUyMCU3RCU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyU3RCkoJTIyJyUyMCUyQiUyMGVuY29kZWQlMjAlMkIlMjAnJTIyKSUzQiU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwY2xvc2VUYWclMjAlMkIlMjAnJTVDbiclMjAlMkIlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAnJTNDJTJGYm9keSUzRSU1Q24nJTIwJTJCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJyUzQyUyRmh0bWwlM0UnJTNCJTBBJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ291dHB1dENvZGUnKS52YWx1ZSUyMCUzRCUyMHBhY2tlZE91dHB1dCUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGFsZXJ0KCdTdWNjZXNzISUyMEZ1bGwlMjBIVE1MJTIwaGFzJTIwYmVlbiUyMHBhY2tlZCUyMGFuZCUyMG9iZnVzY2F0ZWQuJyklM0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QlMEElMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBmdW5jdGlvbiUyMGNvcHlPdXRwdXQoKSUyMCU3QiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGxldCUyMG91dHB1dEJveCUyMCUzRCUyMGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdvdXRwdXRDb2RlJyklM0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBpZiUyMCghb3V0cHV0Qm94LnZhbHVlLnRyaW0oKSklMjAlN0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBhbGVydCgnTm90aGluZyUyMHRvJTIwY29weSUyMHlldCEnKSUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMHJldHVybiUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMG5hdmlnYXRvci5jbGlwYm9hcmQud3JpdGVUZXh0KG91dHB1dEJveC52YWx1ZSkudGhlbigoKSUyMCUzRCUzRSUyMCU3QiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGFsZXJ0KCdQYWNrZWQlMjBjb2RlJTIwY29waWVkJTIwdG8lMjBjbGlwYm9hcmQhJyklM0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlN0QpLmNhdGNoKGVyciUyMCUzRCUzRSUyMCU3QiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMG91dHB1dEJveC5zZWxlY3QoKSUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMGRvY3VtZW50LmV4ZWNDb21tYW5kKCdjb3B5JyklM0IlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBhbGVydCgnUGFja2VkJTIwY29kZSUyMGNvcGllZCUyMHRvJTIwY2xpcGJvYXJkIScpJTNCJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTdEKSUzQiUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCU3RCUwQSUyMCUyMCUyMCUyMCUzQyUyRnNjcmlwdCUzRSUwQSUzQyUyRmJvZHklM0UlMEElM0MlMkZodG1sJTNFJTBB");
-</script>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 md:p-12">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="border-b border-slate-800 pb-4">
+            <h1 class="text-3xl font-extrabold tracking-tight text-blue-400">Advanced HTML Obfuscator</h1>
+            <p class="text-slate-400 mt-1">Pack full HTML, encrypt code, and strip scripts/comments from the Elements tab.</p>
+        </div>
+
+        <!-- Input Area -->
+        <div class="space-y-2">
+            <label class="block text-sm font-semibold text-slate-300">Paste your complete HTML file code here:</label>
+            <textarea id="inputCode" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-cyan-300 focus:outline-none focus:border-blue-500" placeholder="<!DOCTYPE html>&#10;<html>&#10;<head><title>My App</title></head>&#10;<body>&#10;  <h1>Hello World</h1>&#10;  <!-- Secret comment -->&#10;  <script>console.log('Stealth script');</script>&#10;</body>&#10;</html>"></textarea>
+        </div>
+
+        <!-- Obfuscation Options (Matching PHPKobo style) -->
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg space-y-3">
+            <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Obfuscation Options</h3>
+            
+            <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="removeScripts" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-700 focus:ring-blue-500">
+                <span class="text-sm text-slate-300">Remove all script blocks (&lt;script&gt;...&lt;/script&gt;) from the Elements tab in DevTools</span>
+            </label>
+
+            <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="removeComments" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-700 focus:ring-blue-500">
+                <span class="text-sm text-slate-300">Remove all comment blocks (&lt;!--...--&gt;) from the Elements tab in DevTools</span>
+            </label>
+        </div>
+
+        <!-- Action Button -->
+        <div>
+            <button onclick="packAndObfuscate()" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-200 w-full md:w-auto">
+                Obfuscate & Pack HTML
+            </button>
+        </div>
+
+        <!-- Output Area -->
+        <div class="space-y-2">
+            <div class="flex justify-between items-center">
+                <label class="block text-sm font-semibold text-slate-300">Protected Output Code:</label>
+                <button onclick="copyOutput()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded border border-slate-700 transition">Copy Code</button>
+            </div>
+            <textarea id="outputCode" rows="8" readonly class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-emerald-400 focus:outline-none" placeholder="Protected output will appear here..."></textarea>
+        </div>
+
+    </div>
+
+    <!-- Advanced Packer & Stripper Engine -->
+    <script>
+        function packAndObfuscate() {
+            let html = document.getElementById('inputCode').value;
+            
+            if (!html.trim()) {
+                alert('Please enter complete HTML code first!');
+                return;
+            }
+
+            let shouldRemoveComments = document.getElementById('removeComments').checked;
+            let shouldRemoveScripts = document.getElementById('removeScripts').checked;
+
+            // 1. Remove comment blocks if option is checked
+            if (shouldRemoveComments) {
+                html = html.replace(/<!--[\s\S]*?-->/g, '');
+            }
+
+            let extractedScripts = [];
+
+            // 2. Remove script blocks from HTML and store them for memory execution if checked
+            if (shouldRemoveScripts) {
+                let scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+                html = html.replace(scriptRegex, (match, jsCode) => {
+                    if (jsCode.trim()) {
+                        extractedScripts.push(jsCode.trim());
+                    }
+                    return ''; // Completely deletes the <script> tag from the HTML markup!
+                });
+            }
+
+            // 3. Encode the cleaned HTML payload
+            let encodedHtml = btoa(encodeURIComponent(html));
+            
+            // 4. Encode extracted scripts payload separately
+            let encodedScripts = btoa(encodeURIComponent(JSON.stringify(extractedScripts)));
+
+            // 5. Generate the final packing wrapper script
+            let closeTag = '</' + 'script>';
+            let finalOutput = '<!DOCTYPE html>\n' +
+                '<html>\n' +
+                '<head>\n' +
+                '    <meta charset="UTF-8">\n' +
+                '    <title>Protected Page</title>\n' +
+                '</head>\n' +
+                '<body>\n' +
+                '<script>\n' +
+                '(function(htmlPayload, scriptPayload){\n' +
+                '    try {\n' +
+                '        // Write clean HTML (zero script tags or comments in DOM Elements tab)\n' +
+                '        var decodedHtml = decodeURIComponent(atob(htmlPayload));\n' +
+                '        document.open();\n' +
+                '        document.write(decodedHtml);\n' +
+                '        document.close();\n\n' +
+                '        // Execute scripts in memory via eval\n' +
+                '        var scripts = JSON.parse(decodeURIComponent(atob(scriptPayload)));\n' +
+                '        scripts.forEach(function(code) {\n' +
+                '            eval(code);\n' +
+                '        });\n' +
+                '    } catch(e) { console.error("Execution error", e); }\n' +
+                '})("' + encodedHtml + '", "' + encodedScripts + '");\n' +
+                closeTag + '\n' +
+                '</body>\n' +
+                '</html>';
+
+            document.getElementById('outputCode').value = finalOutput;
+            alert('Success! HTML obfuscated and packed with DevTools script/comment stripping enabled.');
+        }
+
+        function copyOutput() {
+            let outputBox = document.getElementById('outputCode');
+            if (!outputBox.value.trim()) {
+                alert('Nothing to copy yet!');
+                return;
+            }
+            navigator.clipboard.writeText(outputBox.value).then(() => {
+                alert('Protected code copied to clipboard!');
+            }).catch(err => {
+                outputBox.select();
+                document.execCommand('copy');
+                alert('Protected code copied to clipboard!');
+            });
+        }
+    </script>
 </body>
 </html>

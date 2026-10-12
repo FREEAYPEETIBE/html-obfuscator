@@ -17,7 +17,7 @@
 
         <!-- Input Area -->
         <div class="space-y-2">
-            <label class="block text-sm font-semibold text-slate-300">Paste your raw HTML code here:</label>
+            <label class="block text-sm font-semibold text-slate-300">Paste your raw HTML code here (must include &lt;script&gt; tags):</label>
             <textarea id="inputCode" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-cyan-300 focus:outline-none focus:border-blue-500" placeholder="<!DOCTYPE html>&#10;<html>&#10;<body>&#10;  <script>&#10;    console.log('Secret logic');&#10;  </script>&#10;</body>&#10;</html>"></textarea>
         </div>
 
@@ -40,9 +40,9 @@
     </div>
 
     <script>
-        // Custom robust protection engine (No external CDN dependencies required)
         function protectCode() {
             let html = document.getElementById('inputCode').value;
+            
             if (!html.trim()) {
                 alert('Please enter some HTML code first!');
                 return;
@@ -50,20 +50,22 @@
 
             // Regex to find content inside <script>...</script>
             let scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+            let scriptFound = false;
 
             let protectedHtml = html.replace(scriptRegex, (match, jsCode) => {
                 if (!jsCode.trim()) return match;
+                scriptFound = true;
 
                 // 1. Minify/Shrink the JS code (remove comments and extra whitespace)
                 let minified = jsCode
-                    .replace(/\/\*[\s\S]*?\*\/|([^:])\/\/.*/g, '$1') // remove comments
-                    .replace(/\s+/g, ' ') // collapse whitespace
+                    .replace(/\/\*[\s\S]*?\*\/|([^:])\/\/.*/g, '$1') 
+                    .replace(/\s+/g, ' ') 
                     .trim();
 
-                // 2. Encode to custom payload representation to prevent plain-text reading
+                // 2. Encode payload
                 let encoded = btoa(encodeURIComponent(minified));
 
-                // 3. Generate a secure runtime decryption wrapper
+                // 3. Generate wrapper
                 let wrapper = `<script>
 (function(p){
     try {
@@ -78,14 +80,28 @@
                 return wrapper;
             });
 
+            if (!scriptFound) {
+                alert('Notice: No <script>...</script> tags were found in your text! Make sure your JavaScript is wrapped in script tags so it can be encrypted.');
+            } else {
+                alert('Success! Scripts protected and encrypted.');
+            }
+
             document.getElementById('outputCode').value = protectedHtml;
         }
 
         function copyOutput() {
             let outputBox = document.getElementById('outputCode');
-            outputBox.select();
-            document.execCommand('copy');
-            alert('Protected code copied to clipboard!');
+            if (!outputBox.value.trim()) {
+                alert('Nothing to copy yet!');
+                return;
+            }
+            navigator.clipboard.writeText(outputBox.value).then(() => {
+                alert('Protected code copied to clipboard!');
+            }).catch(err => {
+                outputBox.select();
+                document.execCommand('copy');
+                alert('Protected code copied to clipboard!');
+            });
         }
     </script>
 </body>
